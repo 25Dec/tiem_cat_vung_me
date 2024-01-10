@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1050562250592",
+    "project_id": "tiem-cat-vung-me-60dd4",
+    "storage_bucket": "tiem-cat-vung-me-60dd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1050562250592:android:0e95e3cc3611b56bb90005",
+        "android_client_info": {
+          "package_name": "com.example.tiem_cat_vung_me"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAm7nDXZBSdhqpjaTcTuTveKqncNRHKGAw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
