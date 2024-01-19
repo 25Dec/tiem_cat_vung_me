@@ -1,11 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CoreUtils {
   CoreUtils._();
 
-  static void showOTPDialog({
-    required BuildContext context,
-    required TextEditingController textController,
-    required VoidCallback onPressed,
-  }) {}
+  static String currencyConverter(num input) =>
+      NumberFormat.simpleCurrency(locale: 'vi-VN', decimalDigits: 0).format(input);
 }

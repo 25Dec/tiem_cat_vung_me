@@ -1,32 +1,37 @@
-import 'package:tiem_cat_vung_me/core/common/entites/product_entity.dart';
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../entites/product_entity.dart';
 
 class ProductModel extends ProductEntity {
-  const ProductModel(
-      {required super.productId,
-      required super.productName,
-      required super.description,
-      required super.price,
-      required super.brand,
-      required super.productCategory,
-      required super.isFavorite,
-      required super.imageUrl,
-      required super.quantityInStock,
-      required super.createdAt,
-      required super.updatedAt});
+  const ProductModel({
+    required super.productId,
+    required super.productName,
+    super.description,
+    required super.prices,
+    required super.brand,
+    required super.productCategory,
+    required super.imagesUrl,
+    required super.quantityInStock,
+    required super.soldQuantity,
+    required super.createdAt,
+    required super.updatedAt,
+  });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      productId: json["productId"],
-      productName: json["productName"],
-      description: json["description"],
-      price: json["price"],
-      brand: json["brand"],
-      productCategory: json["productCategory"],
-      isFavorite: json["isFavorite"],
-      imageUrl: json["imageUrl"],
-      quantityInStock: json["quantityInStock"],
-      createdAt: json["createdAt"],
-      updatedAt: json["updatedAt"],
+      productId: json["productId"] as String,
+      productName: json["productName"] as String,
+      description: json["description"] as String,
+      prices: json["prices"],
+      brand: json["brand"] as String,
+      productCategory: json["productCategory"] as String,
+      imagesUrl: List<String>.from(json["imagesUrl"]),
+      quantityInStock: json["quantityInStock"] as int,
+      soldQuantity: json["soldQuantity"] as int,
+      createdAt: (json["createdAt"] as Timestamp).toDate(),
+      updatedAt: (json["updatedAt"] as Timestamp).toDate(),
     );
   }
 
@@ -35,12 +40,12 @@ class ProductModel extends ProductEntity {
       "productId": productId,
       "productName": productName,
       "description": description,
-      "price": price,
+      "prices": prices,
       "brand": brand,
       "productCategory": productCategory,
-      "isFavorite": isFavorite,
-      "imageUrl": imageUrl,
+      "imagesUrl": imagesUrl,
       "quantityInStock": quantityInStock,
+      "soldQuantity": soldQuantity,
       "createdAt": createdAt,
       "updatedAt": updatedAt,
     };

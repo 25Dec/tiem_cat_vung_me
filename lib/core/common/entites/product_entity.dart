@@ -1,29 +1,28 @@
 import 'package:equatable/equatable.dart';
-import '../../enums/enums.dart';
 
 class ProductEntity extends Equatable {
   final String productId;
   final String productName;
   final String? description;
-  final double price;
+  final Map<String, dynamic> prices;
   final String brand;
-  final ProductCategory productCategory;
-  final bool isFavorite;
-  final String imageUrl;
+  final String productCategory;
+  final List<String> imagesUrl;
   final int quantityInStock;
+  final int soldQuantity;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const ProductEntity({
     required this.productId,
     required this.productName,
-    required this.description,
-    required this.price,
+    this.description,
+    required this.prices,
     required this.brand,
     required this.productCategory,
-    required this.isFavorite,
-    required this.imageUrl,
+    required this.imagesUrl,
     required this.quantityInStock,
+    required this.soldQuantity,
     required this.createdAt,
     required this.updatedAt,
   });
