@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/common/widgets/custom_app_bar.dart';
+import '../../../../core/common/widgets/custom_top_app_bar.dart';
+import '../../../../core/common/widgets/custom_carousel_slider.dart';
 import '../../../../core/common/widgets/product_card.dart';
 import '../../../../core/res/app_colors.dart';
 import '../../../../core/routes/app_route_constants.dart';
 import '../bloc/home_bloc.dart';
-import '../widgets/custom_carousel_slider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,17 +26,20 @@ class _HomePageState extends State<HomePage> {
     BlocProvider.of<HomeBloc>(context).add(GetAllProductsEvent());
   }
 
-  void moveToAllProductsPage() =>
-      GoRouter.of(context).pushNamed(AppPage.allProducts.toName);
+  void moveToAllProductsPage() => context.pushNamed(AppPage.allProducts.toName);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(routeName: HomePage.routeName),
+      appBar: CustomTopAppBar(routeName: HomePage.routeName),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomCarouselSlider(),
+          CustomCarouselSlider(
+            height: 250,
+            autoPlay: true,
+            isHomePage: true,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(

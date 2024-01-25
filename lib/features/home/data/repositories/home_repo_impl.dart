@@ -8,14 +8,14 @@ import '../../domain/repositories/home_repo.dart';
 import '../datasources/home_remote_data_source.dart';
 
 class HomeRepoImpl implements HomeRepo {
-  final HomeRemoteDataSource _homeRemoteDataSource;
+  final HomeRemoteDataSource _remoteDataSource;
 
-  HomeRepoImpl(this._homeRemoteDataSource);
+  HomeRepoImpl(this._remoteDataSource);
 
   @override
   ResultFuture<List<ProductEntity>> getAllProducts() async {
     try {
-      final response = await _homeRemoteDataSource.getAllProducts();
+      final response = await _remoteDataSource.getAllProducts();
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

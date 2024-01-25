@@ -6,7 +6,7 @@ class UserModel extends UserEntity {
     required super.email,
     required super.fullName,
     required super.password,
-    super.phoneNumber,
+    required super.phoneNumber,
     super.gender,
     super.addresses,
   });

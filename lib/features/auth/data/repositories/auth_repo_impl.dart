@@ -13,37 +13,63 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl(this._remoteDataSource);
 
   @override
-  ResultFuture<UserEntity> signIn({
-    required String email,
-    required String password,
-  }) async {
+  ResultFuture<void> sendOtp({required String phoneNumber}) async {
     try {
-      final response = await _remoteDataSource.signIn(
-        email: email,
-        password: password,
-      );
+      await _remoteDataSource.sendOtp(phoneNumber: phoneNumber);
 
-      return Right(response);
+      return const Right(null);
     } on ServerException catch (e) {
-      throw Left(ServerFailure(message: e.message));
+      return Left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  ResultFuture<void> signUpWithEmail({
-    required String email,
+  ResultFuture<bool> verifyOtp({required String otp}) async {
+    try {
+      final response = await _remoteDataSource.verifyOtp(otp: otp);
+
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<bool> checkAccountExists({required String phoneNumber}) async {
+    try {
+      final response =
+          await _remoteDataSource.checkAccountExists(phoneNumber: phoneNumber);
+
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<UserEntity> registerAccount({
     required String fullName,
+    required String email,
     required String password,
   }) async {
     try {
-      await _remoteDataSource.signUpWithEmail(
-        email: email,
-        fullName: fullName,
-        password: password,
-      );
+      final response = await _remoteDataSource.registerAccount(
+          fullName: fullName, email: email, password: password);
+
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<void> signOut() async {
+    try {
+      await _remoteDataSource.signOut();
+
       return const Right(null);
     } on ServerException catch (e) {
-      throw Left(ServerFailure(message: e.message));
+      return Left(ServerFailure(message: e.message));
     }
   }
 }

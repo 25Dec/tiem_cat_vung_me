@@ -1,12 +1,15 @@
 enum AppPage {
-  signIn,
-  signUp,
+  auth,
+  registerAccount,
+  verifyOtp,
   home,
   cart,
   chat,
   search,
   allProducts,
   productDetails,
+  favorites,
+  profile,
   settings,
   notFound
 }
@@ -16,10 +19,12 @@ extension AppPageExtension on AppPage {
     switch (this) {
       case AppPage.home:
         return "/";
-      case AppPage.signIn:
-        return "/sign_in";
-      case AppPage.signUp:
-        return "/sign_up";
+      case AppPage.auth:
+        return "/auth";
+      case AppPage.registerAccount:
+        return "/register_account";
+      case AppPage.verifyOtp:
+        return "/verify_otp";
       case AppPage.cart:
         return "/cart";
       case AppPage.chat:
@@ -30,6 +35,10 @@ extension AppPageExtension on AppPage {
         return "/all_products";
       case AppPage.productDetails:
         return "/product_details";
+      case AppPage.favorites:
+        return "/favorites";
+      case AppPage.profile:
+        return "/profile";
       case AppPage.settings:
         return "/settings";
       case AppPage.notFound:
@@ -43,10 +52,12 @@ extension AppPageExtension on AppPage {
     switch (this) {
       case AppPage.home:
         return "HOME";
-      case AppPage.signIn:
-        return "SIGN_IN";
-      case AppPage.signUp:
-        return "SIGN_UP";
+      case AppPage.auth:
+        return "AUTH";
+      case AppPage.registerAccount:
+        return "REGISTER_ACCOUNT";
+      case AppPage.verifyOtp:
+        return "VERIFY_OTP";
       case AppPage.cart:
         return "CART";
       case AppPage.chat:
@@ -57,6 +68,10 @@ extension AppPageExtension on AppPage {
         return "ALL_PRODUCTS";
       case AppPage.productDetails:
         return "PRODUCT_DETAILS";
+      case AppPage.favorites:
+        return "FAVORITES";
+      case AppPage.profile:
+        return "PROFILE";
       case AppPage.settings:
         return "SETTINGS";
       case AppPage.notFound:

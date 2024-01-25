@@ -34,6 +34,7 @@ dependencies:
   flash: ^3.1.0
   fluentui_system_icons: ^1.1.223
   go_router: 7.1.1
+  pinput: ^3.0.1
 
 dev_dependencies:
   flutter_test:

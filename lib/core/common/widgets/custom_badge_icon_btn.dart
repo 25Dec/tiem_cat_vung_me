@@ -1,51 +1,62 @@
 import 'package:badges/badges.dart' as badges;
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
 import '../../res/app_colors.dart';
 
-class CustomBadgeIconBtn extends StatefulWidget {
-  final VoidCallback onTap;
-  final int amount;
-  final IconData icon;
+class CustomBadgeIconBtn extends StatelessWidget {
+  final void Function() onTap;
+  final int? amount;
+  final IconData? fluentIcon;
+  final IconData? flutterIcon;
 
-  const CustomBadgeIconBtn({
-    super.key,
-    required this.onTap,
-    required this.amount,
-    required this.icon,
-  });
+  const CustomBadgeIconBtn(
+      {super.key,
+      required this.onTap,
+      required this.amount,
+      this.fluentIcon,
+      this.flutterIcon});
 
-  @override
-  State<CustomBadgeIconBtn> createState() => _CustomBadgeIconBtnState();
-}
-
-class _CustomBadgeIconBtnState extends State<CustomBadgeIconBtn> {
   @override
   Widget build(BuildContext context) {
     return badges.Badge(
-      onTap: widget.onTap,
-      position: badges.BadgePosition.topEnd(top: -10, end: -12),
+      position: badges.BadgePosition.topEnd(top: 0, end: 0),
       showBadge: true,
-      badgeContent: Text(
-        widget.amount > 99 ? "99+" : "${widget.amount}",
-        style: const TextStyle(fontSize: 10, color: AppColors.white2),
-      ),
+      badgeContent: amount != null
+          ? Text(
+              amount! > 99 ? "99+" : "$amount",
+              style: const TextStyle(fontSize: 10, color: AppColors.white2),
+            )
+          : null,
       badgeAnimation: const badges.BadgeAnimation.slide(
-        animationDuration: Duration(seconds: 1),
-        colorChangeAnimationDuration: Duration(seconds: 1),
+        animationDuration: Duration(seconds: 0),
         loopAnimation: false,
         curve: Curves.fastOutSlowIn,
         colorChangeAnimationCurve: Curves.easeInCubic,
       ),
-      badgeStyle: const badges.BadgeStyle(
+      badgeStyle: badges.BadgeStyle(
         shape: badges.BadgeShape.circle,
-        badgeColor: AppColors.pink,
-        padding: EdgeInsets.all(4),
+        badgeColor: amount != null ? AppColors.pink : Colors.transparent,
+        padding: const EdgeInsets.all(4),
         elevation: 0,
       ),
-      child: Icon(
-        widget.icon,
-        size: 24,
+      child: IconButton(
+        onPressed: onTap,
+        icon: fluentIcon != null
+            ? Icon(
+                fluentIcon,
+                size: 24,
+              )
+            : Text(
+                String.fromCharCode(flutterIcon!.codePoint),
+                style: TextStyle(
+                  color: Color.fromRGBO(83, 67, 71, 1),
+                  inherit: false,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w100,
+                  fontFamily: flutterIcon!.fontFamily,
+                ),
+              ),
       ),
     );
   }

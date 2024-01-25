@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/common/widgets/custom_app_bar.dart';
+import '../../../../core/common/widgets/custom_top_app_bar.dart';
 import '../../../../core/common/widgets/product_card.dart';
 import '../../../../core/routes/app_route_constants.dart';
 import '../bloc/home_bloc.dart';
@@ -19,7 +19,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(routeName: AllProductsPage.routeName),
+      appBar: CustomTopAppBar(routeName: AllProductsPage.routeName),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is DoneGetAllProductsState) {

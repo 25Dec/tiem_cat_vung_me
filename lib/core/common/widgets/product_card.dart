@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../res/app_colors.dart';
-import '../../utils/core_utils.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../res/app_colors.dart';
+import '../../routes/app_route_constants.dart';
+import '../../utils/core_utils.dart';
 import '../entites/product_entity.dart';
 
 class ProductCard extends StatelessWidget {
@@ -11,19 +13,22 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String productId = product.productId;
     String thumbnail = product.imagesUrl[0];
     String productName = product.productName;
     String price = CoreUtils.currencyConverter(product.prices.values.first);
     int soldQuantity = product.soldQuantity;
+
+    void onTap() {
+      context.push("${AppPage.productDetails.toPath}/$productId");
+    }
 
     return Card(
       color: AppColors.white2,
       elevation: 0,
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () {
-          print("Clicked");
-        },
+        onTap: onTap,
         child: SizedBox(
           width: 170,
           height: 270,
