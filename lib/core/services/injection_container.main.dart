@@ -10,9 +10,15 @@ class InjectionContainer {
   }
 
   static Future<void> _initAuth() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+
     sl.registerFactory(
-      () =>
-          AuthBloc(sendOtp: sl(), verifyOtp: sl(), registerAccount: sl(), signOut: sl()),
+      () => AuthBloc(
+          sendOtp: sl(),
+          verifyOtpAndSignIn: sl(),
+          registerAccount: sl(),
+          signOut: sl(),
+          getUserData: sl()),
     );
 
     sl.registerLazySingleton(
@@ -20,7 +26,7 @@ class InjectionContainer {
     );
 
     sl.registerLazySingleton(
-      () => VerifyOtp(sl()),
+      () => VerifyOtpAndSignIn(sl()),
     );
 
     sl.registerLazySingleton(
@@ -31,17 +37,33 @@ class InjectionContainer {
       () => SignOut(sl()),
     );
 
+    sl.registerLazySingleton(
+      () => GetUserData(sl()),
+    );
+
     sl.registerLazySingleton<AuthRepo>(
-      () => AuthRepoImpl(sl()),
+      () => AuthRepoImpl(
+        sl(),
+        sl(),
+      ),
     );
 
     sl.registerLazySingleton<AuthRemoteDataSource>(
-      () => AuthRemoteDataSourceImpl(sl(), sl()),
+      () => AuthRemoteDataSourceImpl(
+        sl(),
+        sl(),
+      ),
+    );
+
+    sl.registerLazySingleton<AuthLocalDataSource>(
+      () => AuthLocalDataSourceImpl(sl()),
     );
 
     sl.registerLazySingleton(() => FirebaseAuth.instance);
 
     sl.registerLazySingleton(() => FirebaseFirestore.instance);
+
+    sl.registerLazySingleton(() => sharedPreferences);
   }
 
   static Future<void> _initHome() async {

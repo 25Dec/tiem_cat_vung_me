@@ -1,12 +1,14 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/common/widgets/custom_text_button.dart';
+import '../../../../core/common/widgets/custom_text_form_field.dart';
 import '../../../../core/res/app_colors.dart';
+import '../../../../core/routes/app_route_constants.dart';
 import '../../../../core/utils/core_utils.dart';
 import '../bloc/auth_bloc.dart';
-import '../widgets/custom_text_button.dart';
-import 'verify_otp_page.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -18,14 +20,11 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController phoneNumberController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   bool isSignInPage = true;
-  bool isSignInWithSMS = false;
 
   @override
   void dispose() {
     phoneNumberController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
 
@@ -34,17 +33,17 @@ class _AuthPageState extends State<AuthPage> {
       BlocProvider.of<AuthBloc>(context).add(
         SendOtpEvent(phoneNumber: phoneNumberController.text),
       );
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => VerifyOtpPage()));
+      GoRouter.of(context).pushNamed(
+        AppPage.verifyOtp.toName,
+        extra: {"phoneNumber": phoneNumberController.text},
+      );
     }
   }
 
   String? phoneNumberValidator(String? value) {
-    bool isValid = CoreUtils.validatePhoneNumber(value!);
-    return isValid ? null : "Số điện thoại không chính xác";
+    bool isPhoneNumberValid = CoreUtils.validatePhoneNumber(value!);
+    return isPhoneNumberValid ? null : "Số điện thoại không chính xác";
   }
-
-  String? passwordValidator(String? value) {}
 
   @override
   Widget build(BuildContext context) {
@@ -56,27 +55,13 @@ class _AuthPageState extends State<AuthPage> {
           padding: const EdgeInsets.only(top: 16, bottom: 4, left: 16, right: 16),
           child: Column(
             children: [
-              TextFormField(
+              CustomTextFormField(
+                hintText: 'Số điện thoại',
+                validator: phoneNumberValidator,
+                prefixIcon: FluentIcons.phone_24_regular,
                 controller: phoneNumberController,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(FluentIcons.phone_24_regular),
-                  hintText: 'Số điện thoại',
-                  hintStyle: TextStyle(color: AppColors.white3),
-                ),
-                validator: phoneNumberValidator,
               ),
-              const SizedBox(height: 8),
-              if (isSignInPage && !isSignInWithSMS)
-                TextFormField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
-                    hintText: 'Mật khẩu',
-                    hintStyle: TextStyle(color: AppColors.white3),
-                  ),
-                  validator: passwordValidator,
-                ),
               const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
@@ -90,21 +75,7 @@ class _AuthPageState extends State<AuthPage> {
                   child: const Text("Tiếp theo"),
                 ),
               ),
-              if (isSignInPage)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomTextButton(
-                      onPressed: () => setState(() {
-                        isSignInWithSMS = !isSignInWithSMS;
-                      }),
-                      text: isSignInWithSMS
-                          ? "Đăng nhập bằng mật khẩu"
-                          : "Đăng nhập bằng SMS",
-                      textColor: AppColors.blue,
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 8),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

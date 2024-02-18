@@ -5,10 +5,11 @@ class UserModel extends UserEntity {
     required super.uid,
     required super.email,
     required super.fullName,
-    required super.password,
     required super.phoneNumber,
     super.gender,
     super.addresses,
+    super.favorites,
+    super.cart,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -16,10 +17,11 @@ class UserModel extends UserEntity {
       uid: json["uid"],
       email: json["email"],
       fullName: json["fullName"],
-      password: json["password"],
       phoneNumber: json["phoneNumber"],
       gender: json["gender"],
       addresses: json["addresses"],
+      favorites: json["favorites"],
+      cart: json["cart"],
     );
   }
 
@@ -28,10 +30,11 @@ class UserModel extends UserEntity {
       "uid": uid,
       "email": email,
       "fullName": fullName,
-      "password": password,
       "phoneNumber": phoneNumber,
-      "gender": gender,
+      "gender": gender.toString(),
       "addresses": addresses,
+      "favorites": favorites,
+      "cart": cart,
     };
   }
 }

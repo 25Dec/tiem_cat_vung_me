@@ -10,7 +10,8 @@ enum AppPage {
   productDetails,
   favorites,
   profile,
-  settings,
+  accountAndSecurity,
+  addresses,
   notFound
 }
 
@@ -39,8 +40,10 @@ extension AppPageExtension on AppPage {
         return "/favorites";
       case AppPage.profile:
         return "/profile";
-      case AppPage.settings:
-        return "/settings";
+      case AppPage.accountAndSecurity:
+        return "/account_and_security";
+      case AppPage.addresses:
+        return "/addresses";
       case AppPage.notFound:
         return "/not_found";
       default:
@@ -72,8 +75,10 @@ extension AppPageExtension on AppPage {
         return "FAVORITES";
       case AppPage.profile:
         return "PROFILE";
-      case AppPage.settings:
-        return "SETTINGS";
+      case AppPage.accountAndSecurity:
+        return "ACCOUNT_AND_SECURITY";
+      case AppPage.addresses:
+        return "ADDRESSES";
       case AppPage.notFound:
         return "NOT_FOUND";
       default:

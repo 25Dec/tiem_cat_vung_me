@@ -8,19 +8,26 @@ class SendOtpEvent extends AuthEvent {
   SendOtpEvent({required this.phoneNumber});
 }
 
-class VerifyOtpEvent extends AuthEvent {
+class VerifyOtpAndSignInEvent extends AuthEvent {
   final String otp;
 
-  VerifyOtpEvent({required this.otp});
+  VerifyOtpAndSignInEvent({required this.otp});
 }
 
 class RegisterAccountEvent extends AuthEvent {
   final String fullName;
   final String email;
   final String password;
+  final String phoneNumber;
 
-  RegisterAccountEvent(
-      {required this.fullName, required this.email, required this.password});
+  RegisterAccountEvent({
+    required this.fullName,
+    required this.email,
+    required this.password,
+    required this.phoneNumber,
+  });
 }
+
+class GetUserDataEvent extends AuthEvent {}
 
 class SignOutEvent extends AuthEvent {}

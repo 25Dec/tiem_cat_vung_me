@@ -1,9 +1,16 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:tiem_cat_vung_me/core/res/app_colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/common/widgets/custom_text_form_field.dart';
+import '../../../../core/res/app_colors.dart';
+import '../../../../core/utils/core_utils.dart';
+import '../bloc/auth_bloc.dart';
 
 class RegisterAccountPage extends StatefulWidget {
-  const RegisterAccountPage({super.key});
+  final String phoneNumber;
+
+  const RegisterAccountPage({super.key, required this.phoneNumber});
 
   @override
   State<RegisterAccountPage> createState() => _RegisterAccountPageState();
@@ -16,71 +23,95 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
   final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
+  void dispose() {
+    fullNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  String? emailValidator(String? value) {
+    bool isEmailValid = CoreUtils.validateEmail(value!);
+    return isEmailValid ? null : "Email không hợp lệ";
+  }
+
+  String? passwordValidator(String? value) {
+    bool isPasswordValid = CoreUtils.validatePassword(value!);
+    return isPasswordValid ? null : "Mật khẩu không hợp lệ";
+  }
+
+  String? confirmPasswordValidator(String? value) {
+    return confirmPasswordController.text == passwordController.text
+        ? null
+        : "Mật khẩu không khớp";
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text("Tạo tài khoản")),
-      body: Form(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16, bottom: 4, left: 16, right: 16),
-          child: Column(
-            children: [
-              TextFormField(
-                controller: fullNameController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(FluentIcons.person_circle_24_regular),
+      body: SingleChildScrollView(
+        child: Form(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 16,
+              bottom: 4,
+              left: 16,
+              right: 16,
+            ),
+            child: Column(
+              children: [
+                CustomTextFormField(
                   hintText: 'Họ và tên',
-                  hintStyle: TextStyle(color: AppColors.white3),
+                  prefixIcon: FluentIcons.person_circle_24_regular,
+                  controller: fullNameController,
                 ),
-                validator: null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: emailController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(FluentIcons.mail_24_regular),
+                const SizedBox(height: 8),
+                CustomTextFormField(
                   hintText: 'Email',
-                  hintStyle: TextStyle(color: AppColors.white3),
+                  prefixIcon: FluentIcons.mail_24_regular,
+                  controller: emailController,
+                  validator: emailValidator,
                 ),
-                validator: null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: passwordController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
+                const SizedBox(height: 8),
+                CustomTextFormField(
                   hintText: 'Mật khẩu',
-                  hintStyle: TextStyle(color: AppColors.white3),
+                  prefixIcon: FluentIcons.lock_closed_24_regular,
+                  controller: passwordController,
+                  validator: passwordValidator,
                 ),
-                validator: null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: confirmPasswordController,
-                keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
+                const SizedBox(height: 8),
+                CustomTextFormField(
                   hintText: 'Xác nhận mật khẩu',
-                  hintStyle: TextStyle(color: AppColors.white3),
+                  prefixIcon: FluentIcons.lock_closed_24_regular,
+                  controller: confirmPasswordController,
+                  validator: confirmPasswordValidator,
                 ),
-                validator: null,
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    elevation: MaterialStateProperty.all(0),
-                    backgroundColor: MaterialStateProperty.all(AppColors.pink),
-                    foregroundColor: MaterialStateProperty.all(AppColors.white2),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => authBloc.add(
+                      RegisterAccountEvent(
+                        fullName: fullNameController.text.trim(),
+                        email: emailController.text.trim(),
+                        phoneNumber: widget.phoneNumber,
+                        password: passwordController.text.trim(),
+                      ),
+                    ),
+                    style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
+                      backgroundColor: MaterialStateProperty.all(AppColors.pink),
+                      foregroundColor: MaterialStateProperty.all(AppColors.white2),
+                    ),
+                    child: const Text("Tạo tài khoản"),
                   ),
-                  child: const Text("Tạo tài khoản"),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

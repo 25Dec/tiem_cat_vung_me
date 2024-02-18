@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../features/auth/data/datasources/auth_local_data_source.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repo_impl.dart';
 import '../../features/auth/domain/repositories/auth_repo.dart';
+import '../../features/auth/domain/usecases/get_user_data.dart';
 import '../../features/auth/domain/usecases/register_account.dart';
 import '../../features/auth/domain/usecases/send_otp.dart';
 import '../../features/auth/domain/usecases/sign_out.dart';
-import '../../features/auth/domain/usecases/verify_otp.dart';
+import '../../features/auth/domain/usecases/verify_otp_and_sign_in.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/home/data/datasources/home_remote_data_source.dart';
 import '../../features/home/data/repositories/home_repo_impl.dart';

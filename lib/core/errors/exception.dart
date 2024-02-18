@@ -4,8 +4,4 @@ class ServerException implements Exception {
   ServerException({required this.message});
 }
 
-class CacheException implements Exception {
-  final String message;
-
-  CacheException({required this.message});
-}
+class CacheException implements Exception {}

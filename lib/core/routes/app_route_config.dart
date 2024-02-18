@@ -10,6 +10,8 @@ import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/all_products_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/product_details/presentation/pages/product_details_page.dart';
+import '../../features/profile/presentation/pages/account_and_security_page.dart';
+import '../../features/profile/presentation/pages/addresses_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
 import '../common/pages/not_found_page.dart';

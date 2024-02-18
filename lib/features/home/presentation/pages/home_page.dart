@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/common/widgets/custom_top_app_bar.dart';
 import '../../../../core/common/widgets/custom_carousel_slider.dart';
+import '../../../../core/common/widgets/custom_top_app_bar.dart';
 import '../../../../core/common/widgets/product_card.dart';
 import '../../../../core/res/app_colors.dart';
 import '../../../../core/routes/app_route_constants.dart';
@@ -41,7 +41,10 @@ class _HomePageState extends State<HomePage> {
             isHomePage: true,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 4,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   onPressed: () => moveToAllProductsPage(),
-                  icon: const Icon(FluentIcons.arrow_right_24_filled),
+                  icon: const Icon(FluentIcons.chevron_right_24_regular),
                 )
               ],
             ),

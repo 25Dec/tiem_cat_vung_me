@@ -20,7 +20,7 @@ class ProductCard extends StatelessWidget {
     int soldQuantity = product.soldQuantity;
 
     void onTap() {
-      context.push("${AppPage.productDetails.toPath}/$productId");
+      GoRouter.of(context).push("${AppPage.productDetails.toPath}/$productId");
     }
 
     return Card(

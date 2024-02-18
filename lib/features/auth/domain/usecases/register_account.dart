@@ -1,5 +1,4 @@
 import '../../../../core/utils/typedefs.dart';
-import '../entities/user_entity.dart';
 import '../repositories/auth_repo.dart';
 
 class RegisterAccount {
@@ -7,12 +6,17 @@ class RegisterAccount {
 
   RegisterAccount(this._repo);
 
-  ResultFuture<UserEntity> execute({
+  ResultFuture<bool> execute({
     required String fullName,
     required String email,
     required String password,
+    required String phoneNumber,
   }) async {
     return await _repo.registerAccount(
-        fullName: fullName, email: email, password: password);
+      fullName: fullName,
+      email: email,
+      password: password,
+      phoneNumber: phoneNumber,
+    );
   }
 }

@@ -5,18 +5,20 @@ import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/typedefs.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repo.dart';
+import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
+import '../models/user_model.dart';
 
 class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDataSource _remoteDataSource;
+  final AuthLocalDataSource _localDataSource;
 
-  AuthRepoImpl(this._remoteDataSource);
+  AuthRepoImpl(this._remoteDataSource, this._localDataSource);
 
   @override
   ResultFuture<void> sendOtp({required String phoneNumber}) async {
     try {
       await _remoteDataSource.sendOtp(phoneNumber: phoneNumber);
-
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -24,10 +26,12 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  ResultFuture<bool> verifyOtp({required String otp}) async {
+  ResultFuture<UserModel?> verifyOtpAndSignIn({required String otp}) async {
     try {
-      final response = await _remoteDataSource.verifyOtp(otp: otp);
-
+      final response = await _remoteDataSource.verifyOtpAndSignIn(otp: otp);
+      if (response != null) {
+        _localDataSource.cacheUserData(user: response);
+      }
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -35,28 +39,41 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  ResultFuture<bool> checkAccountExists({required String phoneNumber}) async {
-    try {
-      final response =
-          await _remoteDataSource.checkAccountExists(phoneNumber: phoneNumber);
-
-      return Right(response);
-    } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    }
-  }
-
-  @override
-  ResultFuture<UserEntity> registerAccount({
+  ResultFuture<bool> registerAccount({
     required String fullName,
     required String email,
     required String password,
+    required String phoneNumber,
   }) async {
     try {
       final response = await _remoteDataSource.registerAccount(
-          fullName: fullName, email: email, password: password);
-
+        fullName: fullName,
+        email: email,
+        password: password,
+        phoneNumber: phoneNumber,
+      );
       return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<UserModel?> getUserData() async {
+    try {
+      final localUser = await _localDataSource.getCacheUserData();
+      UserModel? remoteUser;
+
+      if (localUser != null) {
+        remoteUser = await _remoteDataSource.getUserData(uid: localUser.uid);
+      } else {
+        return const Right(null);
+      }
+
+      if (remoteUser != null) {
+        return Right(remoteUser);
+      }
+      return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
     }
@@ -66,7 +83,6 @@ class AuthRepoImpl implements AuthRepo {
   ResultFuture<void> signOut() async {
     try {
       await _remoteDataSource.signOut();
-
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

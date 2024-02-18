@@ -6,22 +6,26 @@ class AuthInitial extends AuthState {}
 
 class AuthLoadingState extends AuthState {}
 
-class OTPSentSuccessfullyState extends AuthState {}
-
-class OTPVerificationSuccessfulState extends AuthState {}
-
-class AccountRegistrationSuccessfulState extends AuthState {
+class HasUserDataState extends AuthState {
   final UserEntity user;
 
-  AccountRegistrationSuccessfulState({required this.user});
+  HasUserDataState({required this.user});
 }
 
-class AlreadyHaveAnAccountState extends AuthState {}
+class NoUserDataFoundState extends AuthState {}
+
+class AccountRegistrationSuccessfulState extends AuthState {}
+
+class AlreadyHaveAnAccountState extends AuthState {
+  final UserEntity user;
+
+  AlreadyHaveAnAccountState({required this.user});
+}
 
 class NotHaveAnAccountState extends AuthState {}
 
-class AuthError extends AuthState {
+class AuthErrorState extends AuthState {
   final String message;
 
-  AuthError({required this.message});
+  AuthErrorState({required this.message});
 }

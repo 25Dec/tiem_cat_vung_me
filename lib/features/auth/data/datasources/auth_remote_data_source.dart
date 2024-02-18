@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -6,22 +8,30 @@ import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<void> sendOtp({required String phoneNumber});
-  Future<bool> verifyOtp({required String otp});
-  Future<bool> checkAccountExists({required String phoneNumber});
-  Future<UserModel> registerAccount({
+  Future<UserModel?> verifyOtpAndSignIn({required String otp});
+  Future<bool> registerAccount({
     required String fullName,
     required String email,
     required String password,
+    required String phoneNumber,
   });
   Future<void> signOut();
+  Future<UserModel?> getUserData({required String uid});
 }
+
+const USER_INFO = "USER_INFO";
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
-  String _verifyId = "";
 
-  AuthRemoteDataSourceImpl(this._firebaseAuth, this._firebaseFirestore);
+  String _verifyId = "";
+  String _uid = "";
+
+  AuthRemoteDataSourceImpl(
+    this._firebaseAuth,
+    this._firebaseFirestore,
+  );
 
   @override
   Future<void> sendOtp({required String phoneNumber}) async {
@@ -48,57 +58,56 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> verifyOtp({required String otp}) async {
+  Future<UserModel?> verifyOtpAndSignIn({required String otp}) async {
     try {
-      final credential =
-          PhoneAuthProvider.credential(verificationId: _verifyId, smsCode: otp);
-
-      print("Haha $credential");
+      final credential = PhoneAuthProvider.credential(
+        verificationId: _verifyId,
+        smsCode: otp,
+      );
       final response = await _firebaseAuth.signInWithCredential(credential);
+      final user = response.user;
 
-      if (response.user != null) {
-        return true;
-      } else {
-        return false;
+      if (user == null) {
+        throw ServerException(
+          message: 'Please try again later',
+        );
       }
+
+      _uid = user.uid;
+
+      final userData = await _getUserData(_uid);
+
+      print(userData.exists);
+
+      if (userData.exists) {
+        return UserModel.fromJson(userData.data()!);
+      }
+      return null;
     } on FirebaseAuthException catch (e) {
       throw ServerException(message: e.message!);
     }
   }
 
   @override
-  Future<bool> checkAccountExists({required String phoneNumber}) async {
-    bool isExits = false;
-
-    try {
-      final collectionUsers = _firebaseFirestore.collection("users");
-
-      QuerySnapshot querySnapshot = await collectionUsers.get();
-
-      for (DocumentSnapshot document in querySnapshot.docs) {
-        final user = UserModel.fromJson(document.data() as Map<String, dynamic>);
-
-        if (user.phoneNumber == phoneNumber) {
-          isExits = true;
-          break;
-        }
-      }
-      return isExits;
-    } on ServerException catch (e) {
-      throw ServerException(message: e.message);
-    }
-  }
-
-  @override
-  Future<UserModel> registerAccount({
+  Future<bool> registerAccount({
     required String fullName,
     required String email,
     required String password,
+    required String phoneNumber,
   }) async {
     try {
-      throw ServerException(message: "");
-    } on ServerException catch (e) {
-      throw ServerException(message: e.message);
+      final response = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await response.user?.updateDisplayName(fullName);
+      await response.user?.updatePassword(password);
+      await _setUserData(_firebaseAuth.currentUser!, phoneNumber);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'auth/email-already-in-use') {}
+      throw ServerException(message: e.message!);
     }
   }
 
@@ -111,13 +120,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  Future<UserModel> _getUserData({required String uid}) async {
-    try {
-      final response = await _firebaseFirestore.collection("users").doc(uid).get();
-      final user = response.data();
-      return UserModel.fromJson(user!);
-    } on ServerException catch (e) {
-      throw ServerException(message: e.message);
-    }
+  @override
+  Future<UserModel?> getUserData({required String uid}) async {}
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData(
+    String uid,
+  ) async {
+    return await _firebaseFirestore.collection("users").doc(uid).get();
+  }
+
+  Future<void> _setUserData(User user, String phoneNumber) async {
+    await _firebaseFirestore.collection("users").doc(user.uid).set(
+          UserModel(
+            uid: _uid,
+            email: user.email!,
+            fullName: user.displayName!,
+            phoneNumber: phoneNumber,
+          ).toJson(),
+        );
   }
 }

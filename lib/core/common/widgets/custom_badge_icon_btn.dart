@@ -1,5 +1,4 @@
 import 'package:badges/badges.dart' as badges;
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
 import '../../res/app_colors.dart';
@@ -10,12 +9,13 @@ class CustomBadgeIconBtn extends StatelessWidget {
   final IconData? fluentIcon;
   final IconData? flutterIcon;
 
-  const CustomBadgeIconBtn(
-      {super.key,
-      required this.onTap,
-      required this.amount,
-      this.fluentIcon,
-      this.flutterIcon});
+  const CustomBadgeIconBtn({
+    super.key,
+    required this.onTap,
+    this.amount,
+    this.fluentIcon,
+    this.flutterIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
