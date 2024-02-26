@@ -11,7 +11,12 @@ import '../../../../core/utils/core_utils.dart';
 import '../bloc/auth_bloc.dart';
 
 class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+  final bool? isSignUpPage;
+
+  const AuthPage({
+    super.key,
+    this.isSignUpPage,
+  });
 
   @override
   State<AuthPage> createState() => _AuthPageState();
@@ -20,7 +25,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController phoneNumberController = TextEditingController();
-  bool isSignInPage = true;
+  bool isSignUpPage = false;
 
   @override
   void dispose() {
@@ -48,11 +53,20 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(isSignInPage ? "Đăng nhập" : "Đăng ký")),
+      appBar: AppBar(
+        title: Text(
+          !isSignUpPage ? "Đăng nhập" : "Đăng ký",
+        ),
+      ),
       body: Form(
         key: formKey,
         child: Padding(
-          padding: const EdgeInsets.only(top: 16, bottom: 4, left: 16, right: 16),
+          padding: const EdgeInsets.only(
+            top: 16,
+            bottom: 4,
+            left: 16,
+            right: 16,
+          ),
           child: Column(
             children: [
               CustomTextFormField(
@@ -80,13 +94,13 @@ class _AuthPageState extends State<AuthPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(isSignInPage ? "Bạn chưa có tài khoản?" : "Bạn đã có tài khoản?"),
+                  Text(!isSignUpPage ? "Bạn chưa có tài khoản?" : "Bạn đã có tài khoản?"),
                   const SizedBox(width: 4),
                   CustomTextButton(
                     onPressed: () => setState(() {
-                      isSignInPage = !isSignInPage;
+                      isSignUpPage = !isSignUpPage;
                     }),
-                    text: isSignInPage ? "Đăng ký" : "Đăng nhập",
+                    text: !isSignUpPage ? "Đăng ký" : "Đăng nhập",
                     textColor: AppColors.blue,
                   )
                 ],

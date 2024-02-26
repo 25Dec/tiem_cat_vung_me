@@ -1,9 +1,11 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/common/widgets/custom_text_form_field.dart';
 import '../../../../core/res/app_colors.dart';
+import '../../../../core/routes/app_route_constants.dart';
 import '../../../../core/utils/core_utils.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -53,64 +55,81 @@ class _RegisterAccountPageState extends State<RegisterAccountPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("Tạo tài khoản")),
-      body: SingleChildScrollView(
-        child: Form(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              top: 16,
-              bottom: 4,
-              left: 16,
-              right: 16,
-            ),
-            child: Column(
-              children: [
-                CustomTextFormField(
-                  hintText: 'Họ và tên',
-                  prefixIcon: FluentIcons.person_circle_24_regular,
-                  controller: fullNameController,
-                ),
-                const SizedBox(height: 8),
-                CustomTextFormField(
-                  hintText: 'Email',
-                  prefixIcon: FluentIcons.mail_24_regular,
-                  controller: emailController,
-                  validator: emailValidator,
-                ),
-                const SizedBox(height: 8),
-                CustomTextFormField(
-                  hintText: 'Mật khẩu',
-                  prefixIcon: FluentIcons.lock_closed_24_regular,
-                  controller: passwordController,
-                  validator: passwordValidator,
-                ),
-                const SizedBox(height: 8),
-                CustomTextFormField(
-                  hintText: 'Xác nhận mật khẩu',
-                  prefixIcon: FluentIcons.lock_closed_24_regular,
-                  controller: confirmPasswordController,
-                  validator: confirmPasswordValidator,
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => authBloc.add(
-                      RegisterAccountEvent(
-                        fullName: fullNameController.text.trim(),
-                        email: emailController.text.trim(),
-                        phoneNumber: widget.phoneNumber,
-                        password: passwordController.text.trim(),
-                      ),
-                    ),
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
-                      backgroundColor: MaterialStateProperty.all(AppColors.pink),
-                      foregroundColor: MaterialStateProperty.all(AppColors.white2),
-                    ),
-                    child: const Text("Tạo tài khoản"),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AccountRegistrationSuccessfulState) {
+            CoreUtils.showCustomDialog(
+              context,
+              title: "Đăng kí thành công!",
+              content: "Xin chúc mừng, bạn đã đăng kí tài khoản thành công",
+              acceptText: "Tiếp tục",
+              onAccpet: () => GoRouter.of(context).pushReplacementNamed(
+                AppPage.home.toName,
+              ),
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          child: Form(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 16,
+                bottom: 4,
+                left: 16,
+                right: 16,
+              ),
+              child: Column(
+                children: [
+                  CustomTextFormField(
+                    hintText: 'Họ và tên',
+                    prefixIcon: FluentIcons.person_circle_24_regular,
+                    controller: fullNameController,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  CustomTextFormField(
+                    hintText: 'Email',
+                    prefixIcon: FluentIcons.mail_24_regular,
+                    controller: emailController,
+                    validator: emailValidator,
+                  ),
+                  const SizedBox(height: 8),
+                  CustomTextFormField(
+                    hintText: 'Mật khẩu',
+                    prefixIcon: FluentIcons.lock_closed_24_regular,
+                    controller: passwordController,
+                    validator: passwordValidator,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 8),
+                  CustomTextFormField(
+                    hintText: 'Xác nhận mật khẩu',
+                    prefixIcon: FluentIcons.lock_closed_24_regular,
+                    controller: confirmPasswordController,
+                    validator: confirmPasswordValidator,
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => authBloc.add(
+                        RegisterAccountEvent(
+                          fullName: fullNameController.text.trim(),
+                          email: emailController.text.trim(),
+                          phoneNumber: widget.phoneNumber,
+                          password: passwordController.text.trim(),
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        elevation: MaterialStateProperty.all(0),
+                        backgroundColor: MaterialStateProperty.all(AppColors.pink),
+                        foregroundColor: MaterialStateProperty.all(AppColors.white2),
+                      ),
+                      child: const Text("Tạo tài khoản"),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

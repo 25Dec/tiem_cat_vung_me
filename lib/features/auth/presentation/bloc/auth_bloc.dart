@@ -46,7 +46,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onVerifyOtpAndSignInEvent(
-      VerifyOtpAndSignInEvent event, Emitter<AuthState> emit) async {
+    VerifyOtpAndSignInEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     final response = await _verifyOtpAndSignIn.execute(otp: event.otp);
 
     response.fold(
@@ -60,7 +62,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onRegisterAccountEvent(
-      RegisterAccountEvent event, Emitter<AuthState> emit) async {
+    RegisterAccountEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     final response = await _registerAccount.execute(
       fullName: event.fullName,
       email: event.email,
@@ -87,9 +91,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final response = await _getUserData.execute();
 
     response.fold(
-      (failure) => AuthErrorState(message: failure.message),
+      (failure) {
+        emit(AuthErrorState(message: failure.message));
+      },
       (user) {
-        return user != null ? HasUserDataState(user: user) : NoUserDataFoundState();
+        return user != null
+            ? emit(HasUserDataState(user: user))
+            : emit(NoUserDataFoundState());
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,49 +11,75 @@ import '../bloc/home_bloc.dart';
 class AllProductsPage extends StatefulWidget {
   const AllProductsPage({super.key});
 
-  static String routeName = AppPage.allProducts.toName;
-
   @override
   State<AllProductsPage> createState() => _AllProductsPageState();
 }
 
 class _AllProductsPageState extends State<AllProductsPage> {
   int currentSelection = 1;
+  int isPriceAsc = 0;
 
   void changeCurrentSelection(int selection) {
-    setState(() => currentSelection = selection);
+    setState(() {
+      currentSelection = selection;
+    });
+  }
+
+  void getAllNewProducts() {
+    changeCurrentSelection(1);
+    isPriceAsc = 0;
+    BlocProvider.of<HomeBloc>(context).add(
+      GetAllNewProductsEvent(),
+    );
+  }
+
+  void getAllBestSellingProducts() {
+    changeCurrentSelection(2);
+    isPriceAsc = 0;
+    BlocProvider.of<HomeBloc>(context).add(
+      GetAllBestSellingProductsEvent(),
+    );
+  }
+
+  void getAllProductsByPrice() {
+    changeCurrentSelection(3);
+    isPriceAsc++;
+    BlocProvider.of<HomeBloc>(context).add(
+      GetAllProductsSortedByPriceEvent(isPriceAsc: isPriceAsc.isOdd),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomTopAppBar(routeName: AllProductsPage.routeName),
+      appBar: CustomTopAppBar(routeName: AppPage.allProducts.toName),
       body: Stack(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             margin: const EdgeInsets.only(top: 48),
-            child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-              if (state is DoneGetAllProductsState) {
-                final products = state.products;
-                return GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 4,
-                    mainAxisSpacing: 4,
-                  ),
-                  itemCount: products.length,
-                  itemBuilder: (_, index) => ProductCard(
-                    product: products[index],
-                  ),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
-            }),
+            child: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state is DoneGetProductsState) {
+                  final products = state.products;
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (_, index) => ProductCard(
+                      product: products[index],
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+              },
+            ),
           ),
           Positioned(
             child: Container(
@@ -76,10 +103,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                         ),
                       ),
                       child: InkWell(
-                        onTap: () {
-                          int selectionNumber = 1;
-                          changeCurrentSelection(selectionNumber);
-                        },
+                        onTap: getAllNewProducts,
                         child: Ink(
                           child: SizedBox(
                             child: Align(
@@ -115,10 +139,7 @@ class _AllProductsPageState extends State<AllProductsPage> {
                         ),
                       ),
                       child: InkWell(
-                        onTap: () {
-                          int selectionNumber = 2;
-                          changeCurrentSelection(selectionNumber);
-                        },
+                        onTap: getAllBestSellingProducts,
                         child: Ink(
                           child: SizedBox(
                             child: Align(
@@ -154,21 +175,36 @@ class _AllProductsPageState extends State<AllProductsPage> {
                         ),
                       ),
                       child: InkWell(
-                        onTap: () {
-                          int selectionNumber = 3;
-                          changeCurrentSelection(selectionNumber);
-                        },
+                        onTap: getAllProductsByPrice,
                         child: Ink(
                           child: SizedBox(
                             child: Align(
                               alignment: Alignment.center,
-                              child: Text(
-                                "Giá",
-                                style: TextStyle(
-                                  color: currentSelection == 3
-                                      ? AppColors.pink
-                                      : AppColors.white4,
-                                ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Giá",
+                                    style: TextStyle(
+                                      color: currentSelection == 3
+                                          ? AppColors.pink
+                                          : AppColors.white4,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Icon(
+                                    isPriceAsc == 0
+                                        ? FluentIcons.chevron_up_down_16_regular
+                                        : isPriceAsc.isOdd
+                                            ? FluentIcons.arrow_up_16_regular
+                                            : FluentIcons.arrow_down_16_regular,
+                                    size: 12,
+                                    color: currentSelection == 3
+                                        ? AppColors.pink
+                                        : AppColors.white4,
+                                  )
+                                ],
                               ),
                             ),
                           ),

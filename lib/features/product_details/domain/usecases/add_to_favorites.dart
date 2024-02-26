@@ -6,7 +6,7 @@ class AddToFavorites {
 
   AddToFavorites(this._repo);
 
-  ResultFuture<void> execute() async {
-    return await _repo.addToFavorites();
+  ResultFuture<void> execute({required String productId}) async {
+    return await _repo.addToFavorites(productId: productId);
   }
 }

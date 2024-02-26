@@ -9,11 +9,11 @@ import 'package:tiem_cat_vung_me/features/auth/presentation/bloc/auth_bloc.dart'
 import '../../../../core/common/entites/product_entity.dart';
 import '../../../../core/res/app_colors.dart';
 
-class CustomBottomAppBar extends StatelessWidget {
+class CustomProductDetailsBottomAppBar extends StatelessWidget {
   final BuildContext context;
   final ProductEntity product;
 
-  const CustomBottomAppBar({
+  const CustomProductDetailsBottomAppBar({
     super.key,
     required this.context,
     required this.product,
@@ -43,8 +43,8 @@ class CustomBottomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      padding: EdgeInsets.zero,
       height: 50,
+      padding: EdgeInsets.zero,
       color: AppColors.white2,
       surfaceTintColor: AppColors.white2,
       child: BlocBuilder<AuthBloc, AuthState>(

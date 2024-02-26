@@ -30,7 +30,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       GetProductDetailsEvent event, Emitter<ProductDetailsState> emit) async {
     emit(GettingProductDetailsState());
 
-    final response = await _getProductDetails.execute(event.id);
+    final response = await _getProductDetails.execute(id: event.id);
 
     response.fold(
       (failure) => emit(ProductDetailsError(message: failure.message)),
@@ -38,8 +38,13 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
     );
   }
 
-  void _onAddToCartEvent(AddToCartEvent event, Emitter<ProductDetailsState> emit) async {
-    final response = await _addToCart.execute();
+  void _onAddToCartEvent(
+    AddToCartEvent event,
+    Emitter<ProductDetailsState> emit,
+  ) async {
+    final response = await _addToCart.execute(
+      productId: event.productId,
+    );
 
     response.fold(
       (failure) => emit(ProductDetailsError(message: failure.message)),
@@ -48,8 +53,12 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
   }
 
   void _onAddToFavoritesEvent(
-      AddToFavoritesEvent event, Emitter<ProductDetailsState> emit) async {
-    final response = await _addToFavorites.execute();
+    AddToFavoritesEvent event,
+    Emitter<ProductDetailsState> emit,
+  ) async {
+    final response = await _addToFavorites.execute(
+      productId: event.productId,
+    );
 
     response.fold(
       (failure) => emit(ProductDetailsError(message: failure.message)),

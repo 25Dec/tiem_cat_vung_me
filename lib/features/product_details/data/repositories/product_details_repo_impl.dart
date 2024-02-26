@@ -13,9 +13,9 @@ class ProductDetailsRepoImpl implements ProductDetailsRepo {
   ProductDetailsRepoImpl(this._remoteDataSource);
 
   @override
-  ResultFuture<void> addToCart() async {
+  ResultFuture<void> addToCart({required String productId}) async {
     try {
-      await _remoteDataSource.addToCart();
+      await _remoteDataSource.addToCart(productId: productId);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -23,9 +23,9 @@ class ProductDetailsRepoImpl implements ProductDetailsRepo {
   }
 
   @override
-  ResultFuture<void> addToFavorites() async {
+  ResultFuture<void> addToFavorites({required String productId}) async {
     try {
-      await _remoteDataSource.addToFavorites();
+      await _remoteDataSource.addToFavorites(productId: productId);
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));
@@ -33,9 +33,9 @@ class ProductDetailsRepoImpl implements ProductDetailsRepo {
   }
 
   @override
-  ResultFuture<ProductEntity> getProductDetails(String id) async {
+  ResultFuture<ProductEntity> getProductDetails({required String id}) async {
     try {
-      final response = await _remoteDataSource.getProductDetails(id);
+      final response = await _remoteDataSource.getProductDetails(id: id);
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

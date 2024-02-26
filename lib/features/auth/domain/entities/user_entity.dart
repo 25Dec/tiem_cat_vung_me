@@ -9,7 +9,7 @@ class UserEntity extends Equatable {
   final String fullName;
   final String phoneNumber;
   final Gender? gender;
-  final List<UserAddress>? addresses;
+  final List<UserAddressEntity>? addresses;
   final List<String>? favorites;
   final List<String>? cart;
   // final List<UserPurchaseOrderEntity>? purchaseOrders;

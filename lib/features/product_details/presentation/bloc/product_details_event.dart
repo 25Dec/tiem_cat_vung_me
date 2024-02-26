@@ -8,6 +8,14 @@ class GetProductDetailsEvent extends ProductDetailsEvent {
   GetProductDetailsEvent({required this.id});
 }
 
-class AddToCartEvent extends ProductDetailsEvent {}
+class AddToCartEvent extends ProductDetailsEvent {
+  final String productId;
 
-class AddToFavoritesEvent extends ProductDetailsEvent {}
+  AddToCartEvent({required this.productId});
+}
+
+class AddToFavoritesEvent extends ProductDetailsEvent {
+  final String productId;
+
+  AddToFavoritesEvent({required this.productId});
+}

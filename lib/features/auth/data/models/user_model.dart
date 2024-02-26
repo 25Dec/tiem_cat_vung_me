@@ -1,3 +1,5 @@
+import '../../../../core/common/entites/sub_entities.dart';
+import '../../../../core/enums/enums.dart';
 import '../../domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
@@ -13,15 +15,25 @@ class UserModel extends UserEntity {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    Gender gender;
+
+    if (json["gender"] == Gender.male.toString()) {
+      gender = Gender.male;
+    } else if (json["gender"] == Gender.female.toString()) {
+      gender = Gender.female;
+    } else {
+      gender = Gender.other;
+    }
+
     return UserModel(
       uid: json["uid"],
       email: json["email"],
       fullName: json["fullName"],
       phoneNumber: json["phoneNumber"],
-      gender: json["gender"],
-      addresses: json["addresses"],
-      favorites: json["favorites"],
-      cart: json["cart"],
+      gender: gender,
+      addresses: List<UserAddressEntity>.from(json["addresses"]),
+      favorites: List<String>.from(json["favorites"]),
+      cart: List<String>.from(json["cart"]),
     );
   }
 

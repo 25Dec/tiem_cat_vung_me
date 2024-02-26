@@ -11,6 +11,12 @@ class AppTheme {
   ThemeData get theme {
     return ThemeData(
       useMaterial3: true,
+      appBarTheme: const AppBarTheme(
+        surfaceTintColor: Colors.transparent,
+      ),
+      datePickerTheme: const DatePickerThemeData(
+        surfaceTintColor: Colors.transparent,
+      ),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.pink,
         background: AppColors.white2,

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/favorites/presentation/bloc/favorites_bloc.dart';
 
 import 'core/res/app_theme.dart';
 import 'core/routes/app_route_config.dart';
@@ -29,6 +30,7 @@ void main() async {
         BlocProvider(create: (context) => sl<AuthBloc>()),
         BlocProvider(create: (context) => sl<HomeBloc>()),
         BlocProvider(create: (context) => sl<ProductDetailsBloc>()),
+        BlocProvider(create: (context) => sl<FavoritesBloc>()),
       ],
       child: const MyApp(),
     ),

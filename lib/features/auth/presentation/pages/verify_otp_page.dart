@@ -8,6 +8,7 @@ import 'package:pinput/pinput.dart';
 import '../../../../core/common/widgets/custom_text_button.dart';
 import '../../../../core/res/app_colors.dart';
 import '../../../../core/routes/app_route_constants.dart';
+import '../../../../core/utils/core_utils.dart';
 import '../bloc/auth_bloc.dart';
 
 class VerifyOtpPage extends StatefulWidget {
@@ -23,6 +24,18 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   Timer? timer;
   int maxSeconds = 60;
   late int seconds = maxSeconds;
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
+  }
 
   void startTimer() {
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
@@ -40,18 +53,6 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
-
-  @override
-  void dispose() {
-    timer!.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
 
@@ -62,14 +63,24 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AlreadyHaveAnAccountState) {
-            GoRouter.of(context).pushReplacementNamed(
+            GoRouter.of(context).goNamed(
               AppPage.home.toName,
             );
           }
           if (state is NotHaveAnAccountState) {
-            GoRouter.of(context).pushReplacementNamed(
-              AppPage.registerAccount.toName,
-              extra: {"phoneNumber": widget.phoneNumber!},
+            CoreUtils.showCustomDialog(
+              context,
+              title: "Bạn chưa có tài khoản!",
+              content: "Bạn có muốn tạo tài khoản ngay bây giờ không?",
+              cancelText: "Hủy bỏ",
+              acceptText: "Đồng ý",
+              onCancel: () => GoRouter.of(context).pushReplacementNamed(
+                AppPage.auth.toName,
+              ),
+              onAccpet: () => GoRouter.of(context).pushReplacementNamed(
+                AppPage.registerAccount.toName,
+                extra: {"phoneNumber": widget.phoneNumber!},
+              ),
             );
           }
         },
@@ -90,8 +101,9 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     children: [
                       TextSpan(text: "Mã xác thực (OTP) đã được gửi qua "),
                       TextSpan(
-                          text: "Tin nhắn ",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                        text: "Tin nhắn ",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       TextSpan(text: "của số")
                     ],
                   ),

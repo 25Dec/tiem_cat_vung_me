@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,8 +9,13 @@ import '../entites/product_entity.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductEntity product;
+  final bool displayActionsForFavoritesPage;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.displayActionsForFavoritesPage = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +29,17 @@ class ProductCard extends StatelessWidget {
       GoRouter.of(context).push("${AppPage.productDetails.toPath}/$productId");
     }
 
-    return Card(
-      color: AppColors.white2,
-      elevation: 0,
-      clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: onTap,
-        child: SizedBox(
-          width: 170,
-          height: 270,
+    return SizedBox(
+      width: 170,
+      height: 270,
+      child: Card(
+        color: AppColors.white2,
+        elevation: 0.5,
+        clipBehavior: Clip.hardEdge,
+        child: InkWell(
+          onTap: onTap,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Expanded(
                 child: SizedBox(
@@ -45,7 +52,12 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 4, top: 8),
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  bottom: 4,
+                  top: 8,
+                ),
                 child: SizedBox(
                   width: double.infinity,
                   child: Text(
@@ -56,17 +68,49 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8, bottom: 4),
-                    child: Text(price, style: const TextStyle(color: AppColors.pink)),
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      bottom: 4,
+                    ),
+                    child: Text(
+                      price,
+                      style: const TextStyle(color: AppColors.pink),
+                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8, bottom: 4),
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      bottom: 4,
+                    ),
                     child: Text("Đã bán $soldQuantity"),
                   ),
                 ],
               ),
+              if (displayActionsForFavoritesPage)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        FluentIcons.heart_24_regular,
+                        size: 20,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.shopping_cart_outlined,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

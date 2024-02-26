@@ -49,9 +49,14 @@ class AppRouteConfig {
         path: AppPage.auth.toPath,
         name: AppPage.auth.toName,
         parentNavigatorKey: _rootNavigatorKey,
-        pageBuilder: (context, state) => const MaterialPage(
-          child: AuthPage(),
-        ),
+        pageBuilder: (context, state) {
+          final args = state.extra as Map<String, bool>;
+          return MaterialPage(
+            child: AuthPage(
+              isSignUpPage: args["isSignUpPage"],
+            ),
+          );
+        },
       ),
       GoRoute(
         path: AppPage.verifyOtp.toPath,
@@ -137,6 +142,25 @@ class AppRouteConfig {
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => const MaterialPage(
           child: AddressesPage(),
+        ),
+      ),
+      GoRoute(
+        path: AppPage.editAddress.toPath,
+        name: AppPage.editAddress.toName,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) {
+          final args = state.extra as Map<String, UserAddressEntity>;
+          return MaterialPage(
+            child: EditAddressPage(userAddress: args["userAddress"]!),
+          );
+        },
+      ),
+      GoRoute(
+        path: AppPage.addNewAddress.toPath,
+        name: AppPage.addNewAddress.toName,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => const MaterialPage(
+          child: AddNewAddressPage(),
         ),
       ),
       GoRoute(

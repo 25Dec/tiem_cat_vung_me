@@ -12,11 +12,10 @@ import '../../../../core/utils/core_utils.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/product_details_bloc.dart';
-import '../widgets/custom_bottom_app_bar.dart';
+import '../widgets/custom_product_details_bottom_app_bar.dart';
 import '../widgets/custom_expansion_tile.dart';
 
 class ProductDetailsPage extends StatefulWidget {
-  static String routeName = AppPage.productDetails.toName;
   final String productId;
 
   const ProductDetailsPage({super.key, required this.productId});
@@ -44,7 +43,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomTopAppBar(routeName: ProductDetailsPage.routeName),
+      appBar: CustomTopAppBar(routeName: AppPage.productDetails.toName),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, authState) {
           return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
@@ -113,7 +112,10 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         builder: (context, state) {
           if (state is DoneGetProductDetailsState) {
             final product = state.product;
-            return CustomBottomAppBar(context: context, product: product);
+            return CustomProductDetailsBottomAppBar(
+              context: context,
+              product: product,
+            );
           }
           return Container();
         },

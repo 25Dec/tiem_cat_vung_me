@@ -3,7 +3,6 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/errors/exception.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/typedefs.dart';
-import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repo.dart';
 import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
@@ -61,11 +60,11 @@ class AuthRepoImpl implements AuthRepo {
   @override
   ResultFuture<UserModel?> getUserData() async {
     try {
-      final localUser = await _localDataSource.getCacheUserData();
+      final localUserID = await _localDataSource.getCacheUserData();
       UserModel? remoteUser;
 
-      if (localUser != null) {
-        remoteUser = await _remoteDataSource.getUserData(uid: localUser.uid);
+      if (localUserID != null) {
+        remoteUser = await _remoteDataSource.getUserData(uid: localUserID);
       } else {
         return const Right(null);
       }
@@ -83,6 +82,7 @@ class AuthRepoImpl implements AuthRepo {
   ResultFuture<void> signOut() async {
     try {
       await _remoteDataSource.signOut();
+      await _localDataSource.deleteCacheUserData();
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

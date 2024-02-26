@@ -25,7 +25,10 @@ class CustomBadgeIconBtn extends StatelessWidget {
       badgeContent: amount != null
           ? Text(
               amount! > 99 ? "99+" : "$amount",
-              style: const TextStyle(fontSize: 10, color: AppColors.white2),
+              style: const TextStyle(
+                fontSize: 10,
+                color: AppColors.white2,
+              ),
             )
           : null,
       badgeAnimation: const badges.BadgeAnimation.slide(
@@ -50,7 +53,7 @@ class CustomBadgeIconBtn extends StatelessWidget {
             : Text(
                 String.fromCharCode(flutterIcon!.codePoint),
                 style: TextStyle(
-                  color: Color.fromRGBO(83, 67, 71, 1),
+                  color: const Color.fromRGBO(83, 67, 71, 1),
                   inherit: false,
                   fontSize: 24,
                   fontWeight: FontWeight.w100,

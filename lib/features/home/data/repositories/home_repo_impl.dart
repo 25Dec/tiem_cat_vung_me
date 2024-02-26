@@ -13,9 +13,44 @@ class HomeRepoImpl implements HomeRepo {
   HomeRepoImpl(this._remoteDataSource);
 
   @override
-  ResultFuture<List<ProductEntity>> getAllProducts() async {
+  ResultFuture<List<ProductEntity>> getAllNewProducts() async {
     try {
-      final response = await _remoteDataSource.getAllProducts();
+      final response = await _remoteDataSource.getAllNewProducts();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<List<ProductEntity>> getAllBestSellingProducts() async {
+    try {
+      final response = await _remoteDataSource.getAllBestSellingProducts();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<List<ProductEntity>> getAllProductsSortedByPrice({
+    required bool isPriceAsc,
+  }) async {
+    try {
+      final response =
+          await _remoteDataSource.getAllProductsSortedByPrice(isPriceAsc: isPriceAsc);
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  ResultFuture<List<ProductEntity>> getProductsByFilter({
+    required List<String> options,
+  }) async {
+    try {
+      final response = await _remoteDataSource.getProductsByFilter(options: options);
       return Right(response);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

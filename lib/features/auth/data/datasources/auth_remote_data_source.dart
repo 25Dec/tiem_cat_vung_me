@@ -77,8 +77,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final userData = await _getUserData(_uid);
 
-      print(userData.exists);
-
       if (userData.exists) {
         return UserModel.fromJson(userData.data()!);
       }
@@ -96,17 +94,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String phoneNumber,
   }) async {
     try {
-      final response = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      await response.user?.updateDisplayName(fullName);
-      await response.user?.updatePassword(password);
-      await _setUserData(_firebaseAuth.currentUser!, phoneNumber);
+      await _setUserData(fullName, email, phoneNumber);
       return true;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'auth/email-already-in-use') {}
       throw ServerException(message: e.message!);
     }
   }
@@ -121,20 +111,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel?> getUserData({required String uid}) async {}
-
-  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData(
-    String uid,
-  ) async {
-    return await _firebaseFirestore.collection("users").doc(uid).get();
+  Future<UserModel?> getUserData({required String uid}) async {
+    final result = await _getUserData(uid);
+    return UserModel.fromJson(result.data()!);
   }
 
-  Future<void> _setUserData(User user, String phoneNumber) async {
-    await _firebaseFirestore.collection("users").doc(user.uid).set(
+  Future<DocumentSnapshot<Map<String, dynamic>>> _getUserData(String uid) async {
+    final result = await _firebaseFirestore.collection("users").doc(uid).get();
+    return result;
+  }
+
+  Future<void> _setUserData(
+    String fullName,
+    String email,
+    String phoneNumber,
+  ) async {
+    await _firebaseFirestore.collection("users").doc(_uid).set(
           UserModel(
             uid: _uid,
-            email: user.email!,
-            fullName: user.displayName!,
+            email: email,
+            fullName: fullName,
             phoneNumber: phoneNumber,
           ).toJson(),
         );

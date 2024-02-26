@@ -6,7 +6,7 @@ class AddToCart {
 
   AddToCart(this._repo);
 
-  ResultFuture<void> execute() async {
-    return await _repo.addToCart();
+  ResultFuture<void> execute({required String productId}) async {
+    return await _repo.addToCart(productId: productId);
   }
 }

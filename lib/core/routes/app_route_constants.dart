@@ -12,6 +12,8 @@ enum AppPage {
   profile,
   accountAndSecurity,
   addresses,
+  editAddress,
+  addNewAddress,
   notFound
 }
 
@@ -44,6 +46,10 @@ extension AppPageExtension on AppPage {
         return "/account_and_security";
       case AppPage.addresses:
         return "/addresses";
+      case AppPage.editAddress:
+        return "/edit_address";
+      case AppPage.addNewAddress:
+        return "/add_new_address";
       case AppPage.notFound:
         return "/not_found";
       default:
@@ -79,6 +85,10 @@ extension AppPageExtension on AppPage {
         return "ACCOUNT_AND_SECURITY";
       case AppPage.addresses:
         return "ADDRESSES";
+      case AppPage.editAddress:
+        return "EDIT_ADDRESS";
+      case AppPage.addNewAddress:
+        return "ADD_NEW_ADDRESS";
       case AppPage.notFound:
         return "NOT_FOUND";
       default:

@@ -7,7 +7,7 @@ class GetProductDetails {
 
   GetProductDetails(this._repo);
 
-  ResultFuture<ProductEntity> execute(String id) async {
-    return await _repo.getProductDetails(id);
+  ResultFuture<ProductEntity> execute({required String id}) async {
+    return await _repo.getProductDetails(id: id);
   }
 }

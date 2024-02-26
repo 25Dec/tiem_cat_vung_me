@@ -7,6 +7,7 @@ class InjectionContainer {
     await _initAuth();
     await _initHome();
     await _initProductDetails();
+    await _initFavorites();
   }
 
   static Future<void> _initAuth() async {
@@ -68,11 +69,28 @@ class InjectionContainer {
 
   static Future<void> _initHome() async {
     sl.registerFactory(
-      () => HomeBloc(getAllProducts: sl()),
+      () => HomeBloc(
+        getAllNewProducts: sl(),
+        getAllBestSellingProducts: sl(),
+        getAllProductsSortedByPrice: sl(),
+        getProductsByFilter: sl(),
+      ),
     );
 
     sl.registerLazySingleton(
-      () => GetAllProducts(sl()),
+      () => GetAllNewProducts(sl()),
+    );
+
+    sl.registerLazySingleton(
+      () => GetAllBestSellingProducts(sl()),
+    );
+
+    sl.registerLazySingleton(
+      () => GetAllProductsSortedByPrice(sl()),
+    );
+
+    sl.registerLazySingleton(
+      () => GetProductsByFilter(sl()),
     );
 
     sl.registerLazySingleton<HomeRepo>(
@@ -111,6 +129,24 @@ class InjectionContainer {
 
     sl.registerLazySingleton<ProductDetailsRemoteDataSource>(
       () => ProductDetailsRemoteDataSourceImpl(sl()),
+    );
+  }
+
+  static Future<void> _initFavorites() async {
+    sl.registerFactory(
+      () => FavoritesBloc(getFavoritesList: sl()),
+    );
+
+    sl.registerLazySingleton(
+      () => GetFavoritesList(sl()),
+    );
+
+    sl.registerLazySingleton<FavoritesRepo>(
+      () => FavoritesRepoImpl(sl()),
+    );
+
+    sl.registerLazySingleton<FavoritesRemoteDataSource>(
+      () => FavoritesRemoteDataSourceImpl(sl(), sl()),
     );
   }
 }

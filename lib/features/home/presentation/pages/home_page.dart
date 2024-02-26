@@ -13,8 +13,6 @@ import '../bloc/home_bloc.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  static String routeName = AppPage.home.toName;
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -23,71 +21,75 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HomeBloc>(context).add(GetAllProductsEvent());
+    BlocProvider.of<HomeBloc>(context).add(GetAllNewProductsEvent());
   }
 
-  void moveToAllProductsPage() => context.pushNamed(AppPage.allProducts.toName);
+  void moveToAllProductsPage() =>
+      GoRouter.of(context).pushNamed(AppPage.allProducts.toName);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomTopAppBar(routeName: HomePage.routeName),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomCarouselSlider(
-            height: 250,
-            autoPlay: true,
-            isHomePage: true,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 4,
+      appBar: CustomTopAppBar(routeName: AppPage.home.toName),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomCarouselSlider(
+              height: 250,
+              autoPlay: true,
+              isHomePage: true,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Sản phẩm",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.pink,
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 4,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Sản phẩm",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.pink,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () => moveToAllProductsPage(),
-                  icon: const Icon(FluentIcons.chevron_right_24_regular),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: BlocBuilder<HomeBloc, HomeState>(
-                builder: (context, state) {
-                  if (state is DoneGetAllProductsState) {
-                    final products = state.products;
-                    return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: products.length,
-                      itemBuilder: (_, index) => ProductCard(
-                        product: products[index],
-                      ),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  }
-                },
+                  IconButton(
+                    onPressed: () => moveToAllProductsPage(),
+                    icon: const Icon(FluentIcons.chevron_right_24_regular),
+                  )
+                ],
               ),
             ),
-          )
-        ],
+            Flexible(
+              child: Container(
+                height: 250,
+                padding: const EdgeInsets.only(left: 8),
+                child: BlocBuilder<HomeBloc, HomeState>(
+                  builder: (context, state) {
+                    if (state is DoneGetProductsState) {
+                      final products = state.products;
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: products.length,
+                        itemBuilder: (_, index) => ProductCard(
+                          product: products[index],
+                        ),
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
