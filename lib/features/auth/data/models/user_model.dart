@@ -37,6 +37,28 @@ class UserModel extends UserEntity {
     );
   }
 
+  UserModel copyWith({
+    String? uid,
+    String? email,
+    String? fullName,
+    String? phoneNumber,
+    Gender? gender,
+    List<UserAddressEntity>? addresses,
+    List<String>? favorites,
+    List<String>? cart,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      gender: gender ?? this.gender,
+      addresses: addresses ?? this.addresses,
+      favorites: favorites ?? this.favorites,
+      cart: cart ?? this.cart,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "uid": uid,

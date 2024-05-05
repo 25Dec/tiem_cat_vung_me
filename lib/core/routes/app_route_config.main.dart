@@ -50,10 +50,10 @@ class AppRouteConfig {
         name: AppPage.auth.toName,
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) {
-          final args = state.extra as Map<String, bool>;
+          final args = state.extra as Map<String, bool>?;
           return MaterialPage(
             child: AuthPage(
-              isSignUpPage: args["isSignUpPage"],
+              isSignUpPage: args?["isSignUpPage"] ?? false,
             ),
           );
         },

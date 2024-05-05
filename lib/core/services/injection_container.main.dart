@@ -134,11 +134,18 @@ class InjectionContainer {
 
   static Future<void> _initFavorites() async {
     sl.registerFactory(
-      () => FavoritesBloc(getFavoritesList: sl()),
+      () => FavoritesBloc(
+        getFavoritesList: sl(),
+        toggleFavoritesList: sl(),
+      ),
     );
 
     sl.registerLazySingleton(
       () => GetFavoritesList(sl()),
+    );
+
+    sl.registerLazySingleton(
+      () => ToggleFavoritesList(sl()),
     );
 
     sl.registerLazySingleton<FavoritesRepo>(

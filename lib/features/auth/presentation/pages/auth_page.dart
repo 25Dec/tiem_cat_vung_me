@@ -25,7 +25,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController phoneNumberController = TextEditingController();
-  bool isSignUpPage = false;
+  bool toggleIsSignUpPage = false;
 
   @override
   void dispose() {
@@ -55,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          !isSignUpPage ? "Đăng nhập" : "Đăng ký",
+          (widget.isSignUpPage ?? false) || toggleIsSignUpPage ? "Đăng ký" : "Đăng nhập",
         ),
       ),
       body: Form(
@@ -94,13 +94,19 @@ class _AuthPageState extends State<AuthPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(!isSignUpPage ? "Bạn chưa có tài khoản?" : "Bạn đã có tài khoản?"),
+                  Text(
+                    (widget.isSignUpPage ?? false) || toggleIsSignUpPage
+                        ? "Bạn đã có tài khoản?"
+                        : "Bạn chưa có tài khoản?",
+                  ),
                   const SizedBox(width: 4),
                   CustomTextButton(
                     onPressed: () => setState(() {
-                      isSignUpPage = !isSignUpPage;
+                      toggleIsSignUpPage = !toggleIsSignUpPage;
                     }),
-                    text: !isSignUpPage ? "Đăng ký" : "Đăng nhập",
+                    text: (widget.isSignUpPage ?? false) || toggleIsSignUpPage
+                        ? "Đăng nhập"
+                        : "Đăng ký",
                     textColor: AppColors.blue,
                   )
                 ],
